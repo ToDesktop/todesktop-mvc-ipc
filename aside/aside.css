@@ -1,0 +1,105 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.titlebar {
+  height: 24px;
+  -webkit-app-region: drag;
+}
+
+.sidebar {
+  background: rgba(255, 255, 255, 0.2);
+  width: 100%;
+  height: 100vh;
+}
+
+.body {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Gotham Pro", "Proxima Nova", Arial, serif;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.item div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.active {
+  color: #3b82f6;
+}
+
+form {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  line-height: 1.5715;
+  border: 0;
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  padding: 4px 8px;
+  font-size: 16px;
+  border-radius: 4px;
+  outline: none;
+  color: white;
+  background: #007aff;
+}
+
+input {
+  background: transparent;
+  width: 100%;
+  margin-right: 16px;
+
+
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 100ms ease-in-out;
+  border-radius: 4px;
+
+  outline: none;
+  border: 0px;
+  border-bottom: 1px solid grey;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
