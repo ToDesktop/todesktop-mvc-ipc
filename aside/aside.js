@@ -82,4 +82,7 @@ if (workspacesToHydrate.length) {
   createWorkspace({ title: "General" });
 }
 
-publish("workspace:selected", Object.values(workspaces).find(Boolean));
+const selectedWorkspace = Object.values(workspaces).find(Boolean);
+
+selectedWorkspaceTitle = selectedWorkspace.title;
+publish("workspace:selected", selectedWorkspace);
