@@ -1,3 +1,4 @@
+import { publish } from "@todesktop/client-ipc";
 import { emptyItemQuery } from "./item";
 import Store from "./store";
 import View from "./view";
@@ -44,6 +45,8 @@ export default class Controller {
    * @param {!string} title Title of the new item
    */
   addItem(title) {
+    publish("create:todo", { title });
+
     this.store.insert(
       {
         id: Date.now(),
