@@ -1,3 +1,4 @@
+import { publish, subscribe } from "@todesktop/client-ipc";
 import { emptyItemQuery } from "./item";
 import Store from "./store";
 import View from "./view";
@@ -10,6 +11,12 @@ export default class Controller {
   constructor(store, view) {
     this.store = store;
     this.view = view;
+
+    const unsubscribe = subscribe("create:todo", ({ title }) => {
+      this.addItem(title);
+    });
+
+    window.addEventListener("unload", unsubscribe);
 
     view.bindAddItem(this.addItem.bind(this));
     view.bindEditItemSave(this.editItemSave.bind(this));
@@ -157,6 +164,7 @@ export default class Controller {
     }
 
     this.store.count((total, active, completed) => {
+      publish("workspace:status", { total, active, completed });
       this.view.setItemsLeft(active);
       this.view.setClearCompletedButtonVisibility(completed);
 

@@ -1,1 +1,40 @@
+html {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+}
 
+body {
+  width: 100%;
+}
+
+input.new-todo {
+  box-shadow: none;
+}
+
+.titlebar {
+  height: 24px;
+  width: 100%;
+  -webkit-app-region: drag;
+}
+
+footer,
+h1 {
+  display: none;
+}
+
+.todoapp {
+  margin: 8px 16px;
+  box-shadow: none;
+  background: transparent;
+}
+
+.todo-list {
+  padding: 0 8px;
+}
+
+.view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
