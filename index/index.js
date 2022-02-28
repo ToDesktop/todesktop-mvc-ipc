@@ -6,6 +6,9 @@ let selectedWorkspace = null;
 let asideMainWin;
 let spotlightWin;
 
+const ROOT =
+  process.env.NODE_ENV === "production" ? "." : "http://localhost:8080";
+
 const background = async () => {
   asideMainWin = await windows.create({
     width: 750,
@@ -27,7 +30,7 @@ const background = async () => {
     y: 0,
     w: 0.3,
     h: 1,
-    url: "http://localhost:8080/aside.html",
+    url: `${ROOT}/aside.html`,
   });
 
   window.addEventListener("unload", async () => {
@@ -94,7 +97,7 @@ const attachWindowViews = async (title) => {
     y: 0,
     w: 1,
     h: 1,
-    url: "http://localhost:8080/spotlight.html",
+    url: `${ROOT}/spotlight.html`,
     partition: `memory:${title}`,
   });
 
@@ -108,7 +111,7 @@ const attachWindowViews = async (title) => {
     y: 0,
     w: 0.7,
     h: 1,
-    url: "http://localhost:8080/main.html",
+    url: `${ROOT}/main.html`,
     partition: `persist:${title}`,
   });
 };
