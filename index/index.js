@@ -7,7 +7,7 @@ let asideMainWin;
 let spotlightWin;
 
 const ROOT =
-  process.env.NODE_ENV === "production" ? "." : "http://localhost:8080";
+  process.env.NODE_ENV === "production" ? "https://todesktop.github.io/todesktop-mvc-ipc" : "http://localhost:8080";
 
 const background = async () => {
   asideMainWin = await windows.create({
