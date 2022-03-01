@@ -1,4 +1,4 @@
-import { windows, views, webContents } from "@todesktop/client-core";
+import { nativeWindow, views, webContents } from "@todesktop/client-core";
 import { publish, subscribe } from "@todesktop/client-ipc";
 
 const workspaces = [];
@@ -7,10 +7,12 @@ let asideMainWin;
 let spotlightWin;
 
 const ROOT =
-  process.env.NODE_ENV === "production" ? "https://todesktop.github.io/todesktop-mvc-ipc" : "http://localhost:8080";
+  process.env.NODE_ENV === "production"
+    ? "https://todesktop.github.io/todesktop-mvc-ipc"
+    : "http://localhost:8080";
 
 const background = async () => {
-  asideMainWin = await windows.create({
+  asideMainWin = await nativeWindow.create({
     width: 750,
     height: 480,
     frame: false,
@@ -20,7 +22,7 @@ const background = async () => {
     trafficLightPosition: { x: 12, y: 15 },
   });
 
-  spotlightWin = await windows.create({
+  spotlightWin = await nativeWindow.create({
     width: 400,
     height: 160,
   });
@@ -35,8 +37,8 @@ const background = async () => {
 
   window.addEventListener("unload", async () => {
     await Promise.all([
-      windows.destroy(asideMainWin),
-      windows.destroy(spotlightWin),
+      nativeWindow.destroy(asideMainWin),
+      nativeWindow.destroy(spotlightWin),
     ]);
   });
 };
@@ -53,9 +55,9 @@ const createWindowView = async (action, win, args) => {
 
 async function loadViewURL(win, view, { url, action }) {
   if (action === "addBrowserView") {
-    await windows.addBrowserView(win, view);
+    await nativeWindow.addBrowserView(win, view);
   } else {
-    await windows.setBrowserView(win, view);
+    await nativeWindow.setBrowserView(win, view);
   }
 
   const viewContents = await views.getWebContents(view);
@@ -63,7 +65,7 @@ async function loadViewURL(win, view, { url, action }) {
 }
 
 const setViewBounds = async (win, view, { x, y, w, h }) => {
-  const [currWidth, currHeight] = await windows.getSize(win);
+  const [currWidth, currHeight] = await nativeWindow.getSize(win);
 
   await views.setBounds(view, {
     x: Math.round(currWidth * x),
@@ -80,6 +82,8 @@ const setViewBounds = async (win, view, { x, y, w, h }) => {
   });
 };
 
+background();
+
 subscribe("workspace:created", async ({ title }) => {
   if (!workspaces.find((view) => view.title === title)) {
     workspaces.push({ title });
@@ -88,32 +92,28 @@ subscribe("workspace:created", async ({ title }) => {
 });
 
 subscribe("workspace:selected", async ({ title }) => {
-  if (workspaces.some((v) => v.title === title)) await attachWindowViews(title);
-});
+  if (workspaces.some((v) => v.title === title)) {
+    await createWindowView("setBrowserView", spotlightWin, {
+      x: 0,
+      y: 0,
+      w: 1,
+      h: 1,
+      url: `${ROOT}/spotlight.html`,
+      partition: `memory:${title}`,
+    });
 
-const attachWindowViews = async (title) => {
-  await createWindowView("setBrowserView", spotlightWin, {
-    x: 0,
-    y: 0,
-    w: 1,
-    h: 1,
-    url: `${ROOT}/spotlight.html`,
-    partition: `memory:${title}`,
-  });
+    await nativeWindow.setTitle(spotlightWin, title);
+    if (selectedWorkspace) {
+      await nativeWindow.removeBrowserView(asideMainWin, selectedWorkspace);
+    }
 
-  await windows.setTitle(spotlightWin, title);
-  if (selectedWorkspace) {
-    await windows.removeBrowserView(asideMainWin, selectedWorkspace);
+    selectedWorkspace = await createWindowView("addBrowserView", asideMainWin, {
+      x: 0.3,
+      y: 0,
+      w: 0.7,
+      h: 1,
+      url: `${ROOT}/main.html`,
+      partition: `persist:${title}`,
+    });
   }
-
-  selectedWorkspace = await createWindowView("addBrowserView", asideMainWin, {
-    x: 0.3,
-    y: 0,
-    w: 0.7,
-    h: 1,
-    url: `${ROOT}/main.html`,
-    partition: `persist:${title}`,
-  });
-};
-
-background();
+});
