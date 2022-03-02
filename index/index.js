@@ -37,8 +37,8 @@ const background = async () => {
 
   window.addEventListener("unload", async () => {
     await Promise.all([
-      nativeWindow.destroy(asideMainWin),
-      nativeWindow.destroy(spotlightWin),
+      nativeWindow.destroy({ ref: asideMainWin }),
+      nativeWindow.destroy({ ref: spotlightWin }),
     ]);
   });
 };
@@ -55,30 +55,36 @@ const createWindowView = async (action, win, args) => {
 
 async function loadViewURL(win, view, { url, action }) {
   if (action === "addBrowserView") {
-    await nativeWindow.addBrowserView(win, view);
+    await nativeWindow.addBrowserView({ ref: win, viewRef: view });
   } else {
-    await nativeWindow.setBrowserView(win, view);
+    await nativeWindow.setBrowserView({ ref: win, viewRef: view });
   }
 
-  const viewContents = await views.getWebContents(view);
-  await webContents.loadURL(viewContents, url);
+  const viewContents = await views.getWebContents({ ref: view });
+  await webContents.loadURL({ ref: viewContents, URL: url });
 }
 
 const setViewBounds = async (win, view, { x, y, w, h }) => {
-  const [currWidth, currHeight] = await nativeWindow.getSize(win);
+  const [currWidth, currHeight] = await nativeWindow.getSize({ ref: win });
 
-  await views.setBounds(view, {
-    x: Math.round(currWidth * x),
-    y: Math.round(currHeight * y),
-    width: Math.round(currWidth * w),
-    height: Math.round(currHeight * h),
+  await views.setBounds({
+    ref: view,
+    bounds: {
+      x: Math.round(currWidth * x),
+      y: Math.round(currHeight * y),
+      width: Math.round(currWidth * w),
+      height: Math.round(currHeight * h),
+    },
   });
 
-  await views.setAutoResize(view, {
-    width: true,
-    height: true,
-    horizontal: true,
-    vertical: true,
+  await views.setAutoResize({
+    ref: view,
+    dimensions: {
+      width: true,
+      height: true,
+      horizontal: true,
+      vertical: true,
+    },
   });
 };
 
@@ -102,9 +108,12 @@ subscribe("workspace:selected", async ({ title }) => {
       partition: `memory:${title}`,
     });
 
-    await nativeWindow.setTitle(spotlightWin, title);
+    await nativeWindow.setTitle({ ref: spotlightWin, title });
     if (selectedWorkspace) {
-      await nativeWindow.removeBrowserView(asideMainWin, selectedWorkspace);
+      await nativeWindow.removeBrowserView({
+        ref: asideMainWin,
+        viewRef: selectedWorkspace,
+      });
     }
 
     selectedWorkspace = await createWindowView("addBrowserView", asideMainWin, {
