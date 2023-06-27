@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@todesktop/client-core": "1.0.0-alpha10",
-    "@todesktop/client-ipc": "^0.7.0",
+    "@todesktop/client-core": "^1.1.1",
+    "@todesktop/client-ipc": "^0.8.0",
     "todomvc-app-css": "^2.0.1",
     "todomvc-common": "^1.0.2"
   },

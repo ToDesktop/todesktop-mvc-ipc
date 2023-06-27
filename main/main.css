@@ -12,12 +12,6 @@ input.new-todo {
   box-shadow: none;
 }
 
-.titlebar {
-  height: 24px;
-  width: 100%;
-  -webkit-app-region: drag;
-}
-
 footer,
 h1 {
   display: none;
@@ -37,4 +31,10 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.titlebar {
+  height: 24px;
+  width: 100%;
+  -webkit-app-region: drag;
 }

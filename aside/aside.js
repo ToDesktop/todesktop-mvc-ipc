@@ -68,10 +68,8 @@ setInterval(
   () => localStorage.setItem("workspaces", JSON.stringify(workspaces)),
   5000
 );
-
 const savedWorkspaces = localStorage.getItem("workspaces");
 if (savedWorkspaces) workspaces = JSON.parse(savedWorkspaces);
-
 const workspacesToHydrate = Object.values(workspaces);
 
 if (workspacesToHydrate.length) {
@@ -83,6 +81,5 @@ if (workspacesToHydrate.length) {
 }
 
 const selectedWorkspace = Object.values(workspaces).find(Boolean);
-
 selectedWorkspaceTitle = selectedWorkspace.title;
 publish("workspace:selected", selectedWorkspace);

@@ -53,7 +53,7 @@ const createWindowView = async (action, win, args) => {
   return view;
 };
 
-async function loadViewURL(win, view, { url, action }) {
+const loadViewURL = async (win, view, { url, action }) => {
   if (action === "addBrowserView") {
     await nativeWindow.addBrowserView({ ref: win, viewRef: view });
   } else {
@@ -61,8 +61,8 @@ async function loadViewURL(win, view, { url, action }) {
   }
 
   const viewContents = await views.getWebContents({ ref: view });
-  await webContents.loadURL({ ref: viewContents, URL: url });
-}
+  await webContents.loadURL({ ref: viewContents }, url);
+};
 
 const setViewBounds = async (win, view, { x, y, w, h }) => {
   const [currWidth, currHeight] = await nativeWindow.getSize({ ref: win });
@@ -87,8 +87,6 @@ const setViewBounds = async (win, view, { x, y, w, h }) => {
     },
   });
 };
-
-background();
 
 subscribe("workspace:created", async ({ title }) => {
   if (!workspaces.find((view) => view.title === title)) {
@@ -126,3 +124,5 @@ subscribe("workspace:selected", async ({ title }) => {
     });
   }
 });
+
+background();

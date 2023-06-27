@@ -165,6 +165,7 @@ export default class Controller {
 
     this.store.count((total, active, completed) => {
       publish("workspace:status", { total, active, completed });
+
       this.view.setItemsLeft(active);
       this.view.setClearCompletedButtonVisibility(completed);
 
